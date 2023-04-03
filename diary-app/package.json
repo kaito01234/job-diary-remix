@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name"
+    "prisma:migrate": "prisma migrate dev --name",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",

@@ -1,6 +1,6 @@
-import type { NextApiHandler } from "next";
-import prisma from "../../lib/prisma";
-import * as z from "zod";
+import type { NextApiHandler } from 'next';
+import prisma from '../../lib/prisma';
+import * as z from 'zod';
 
 const requestBodySchema = z.object({
   title: z.string().min(1),
@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
       data: {
         title: result.title,
         content: result.content,
-        published: true
+        published: true,
       },
     });
     res.json({

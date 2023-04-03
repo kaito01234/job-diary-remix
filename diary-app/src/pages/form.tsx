@@ -1,10 +1,10 @@
-import type { GetServerSideProps } from "next";
-import React from "react";
-import { PostForm } from "../components/PostForm";
-import prisma, { Post } from "../lib/prisma";
+import type { GetServerSideProps } from 'next';
+import React from 'react';
+import { PostForm } from '../components/PostForm';
+import prisma, { Post } from '../lib/prisma';
 
 type Props = {
-  posts: Pick<Post, "id" | "title" | "content">[];
+  posts: Pick<Post, 'id' | 'title' | 'content'>[];
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {

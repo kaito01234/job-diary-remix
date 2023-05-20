@@ -1,5 +1,5 @@
 {
-  "name": "diary-app",
+  "name": "job-diary",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:generate": "prisma generate",
     "ncu": "ncu"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.3",
     "@chakra-ui/react": "^2.6.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
@@ -26,6 +29,8 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "npm-check-updates": "^16.10.12",
     "prisma": "^4.14.0"
   }

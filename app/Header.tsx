@@ -17,7 +17,7 @@ export default function Header() {
       >
         <Flex flex={1} justify="space-between" maxW="5xl" mx="auto">
           <Heading as="h1" size="lg">
-            <NextLink href="/">Blog App</NextLink>
+            <NextLink href="/">日記</NextLink>
           </Heading>
           <Button
             as={NextLink}
@@ -25,12 +25,12 @@ export default function Header() {
             fontWeight={600}
             color="white"
             bg="orange.400"
-            href="/articles/new"
+            href="/notes/new"
             _hover={{
               bg: 'orange.300',
             }}
           >
-            記事を書く
+            日記を書く
           </Button>
         </Flex>
       </Flex>

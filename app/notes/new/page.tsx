@@ -1,48 +1,26 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { FormControl, FormLabel, Input, Textarea, Button } from '../../common/chakra';
 import { useRouter } from 'next/navigation';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
-import dayjs from 'dayjs';
 
-interface DataType {
-  id: number;
-  title: string;
-  comment: string;
-  date: Date;
-  createdAt: string;
-}
-
-export default function EditNote({ params }: { params: { slug: string } }) {
+export default function CreateNote() {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
-  const [id, setId] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const response = await await fetch(`/api/notes/${params.slug}`);
-      const note: DataType = await response.json();
-      setId(note.id);
-      setDate(note.date);
-      setTitle(note.title);
-      setComment(note.comment);
-    };
-    fetchNotes();
-  }, []);
-
   const handleSaveClick = async () => {
     setLoading(true);
     await fetch('/api/notes', {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, date, title, comment }),
+      body: JSON.stringify({ date, title, comment }),
     });
     setLoading(false);
     router.push('/');
@@ -55,7 +33,13 @@ export default function EditNote({ params }: { params: { slug: string } }) {
     <div>
       <FormControl>
         <FormLabel>日付</FormLabel>
-        <Input type="date" value={dayjs(date).format('YYYY-MM-DD')} disabled />
+        <SingleDatepicker
+          date={date}
+          configs={{
+            dateFormat: 'yyyy-MM-dd',
+          }}
+          onDateChange={setDate}
+        />
         <FormLabel>タイトル</FormLabel>
         <Input value={title} onChange={(e) => setTitle(e.target.value)} />
         <FormLabel>本文</FormLabel>
@@ -68,7 +52,7 @@ export default function EditNote({ params }: { params: { slug: string } }) {
           mt={4}
           onClick={handleSaveClick}
         >
-          Update
+          Save
         </Button>
       </FormControl>
     </div>

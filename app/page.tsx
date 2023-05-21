@@ -1,50 +1,62 @@
-import { useState, useEffect, ChangeEvent } from 'react';
-import { Heading } from './common/chakra';
-import ArticleList from './components/ArticleList';
+import NextLink from 'next/link';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Heading,
+  Text,
+  VStack,
+  HStack,
+} from './common/chakra';
+import dayjs from 'dayjs';
 
 interface DataType {
-  key: string;
   id: number;
-  content: string;
+  title: string;
+  comment: string;
+  date: Date;
   createdAt: string;
 }
 
-async function getArticles() {
-  const [content, setContent] = useState('');
-  const [dataSource, setDataSource] = useState<DataType[]>([]);
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const response = await fetch('/api/notes');
-      const notes = await response.json();
-      setDataSource(notes);
-    };
-    fetchNotes();
-  }, []);
-
-  const res = await fetch('http://localhost:3000/api/articles', {
+async function getData() {
+  const notes = await fetch(`${process.env.BASE_URL}/api/notes`, {
     cache: 'no-store',
   });
-
-  // エラーハンドリングを行うことが推奨されている
-  if (!res.ok) {
-    throw new Error('Failed to fetch articles');
-  }
-
-  const data = await res.json();
-
-  return data.articles as Article[];
+  return notes.json();
 }
 
 export default async function Home() {
-  const articles = await getArticles();
+  const notes: DataType[] = await getData();
 
   return (
     <div>
-      <Heading as="h1" mb={4}>
-        新着記事
-      </Heading>
-      <ArticleList articles={articles} />
+      <VStack spacing={4} as="ul">
+        {notes.map((note) => (
+          <Card
+            as={'li'}
+            _hover={{
+              boxShadow: 'xl',
+            }}
+            maxW="100%"
+            minW="100%"
+          >
+            <NextLink href={`/notes/${note.id}`}>
+              <HStack>
+                <CardHeader>
+                  <Heading size="md">{dayjs(note.date).format('YYYY-MM-DD')}</Heading>
+                </CardHeader>
+                <CardBody>
+                  <VStack align="stretch">
+                    {note.title ? <Heading size="xs">{note.title}</Heading> : ''}
+                    <Text fontSize="sm">{note.comment}</Text>
+                  </VStack>
+                </CardBody>
+              </HStack>
+            </NextLink>
+          </Card>
+        ))}
+      </VStack>
     </div>
   );
 }

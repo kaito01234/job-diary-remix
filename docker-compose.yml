@@ -1,5 +1,14 @@
 version: '3'
 services:
+  job-dialy:
+    build:
+      dockerfile: ./Dockerfile
+    image: job-dialy
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: mysql://root:root@host.docker.internal:3306/dialy
+
   db:
     image: mysql:8
     command: mysqld --character-set-server=utf8mb4

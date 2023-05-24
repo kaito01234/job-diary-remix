@@ -10,15 +10,18 @@ services:
       DATABASE_URL: mysql://root:root@host.docker.internal:3306/dialy
 
   db:
-    image: mysql:8
-    command: mysqld --character-set-server=utf8mb4
+    image: mariadb:latest
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     restart: always
     ports:
       - '3306:3306'
     volumes:
       - 'db:/var/lib/mysql'
     environment:
-      MYSQL_ROOT_PASSWORD: 'root'
+      MARIADB_ROOT_PASSWORD: 'root'
 
 volumes:
   db:

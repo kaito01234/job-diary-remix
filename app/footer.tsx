@@ -1,4 +1,4 @@
-import { Container, Box, Text } from './common/chakra';
+import { Container, Box, Text } from '@/components/common/chakra';
 
 export default function Footer() {
   return (

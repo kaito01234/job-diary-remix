@@ -1,15 +1,14 @@
-import NextLink from 'next/link';
 import {
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
+  HStack,
   Heading,
   Text,
   VStack,
-  HStack,
-} from './common/chakra';
+} from '@/components/common/chakra';
 import dayjs from 'dayjs';
+import NextLink from 'next/link';
 
 interface DataType {
   id: number;

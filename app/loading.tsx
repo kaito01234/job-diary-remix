@@ -1,4 +1,4 @@
-import { Box, Spinner } from './common/chakra';
+import { Box, Spinner } from '@/components/common/chakra';
 
 export default function Loading() {
   return (

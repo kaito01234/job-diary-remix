@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function getNote(slug: number) {
+async function getNote(slug: string) {
   const note = await prisma.notes.findUnique({
     where: {
       id: slug,
@@ -22,6 +22,6 @@ export async function GET(
   }
 ) {
   const { slug } = params;
-  const note = await getNote(Number(slug));
+  const note = await getNote(slug);
   return NextResponse.json(note);
 }

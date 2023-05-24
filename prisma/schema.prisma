@@ -18,7 +18,7 @@ datasource db {
 // }
 
 model notes {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   title     String
   comment   String
   date      DateTime

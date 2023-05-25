@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import NextLink from 'next/link';
 
 interface DataType {
-  id: number;
+  id: string;
   title: string;
   comment: string;
   date: Date;
@@ -31,31 +31,37 @@ export default async function Home() {
   return (
     <div>
       <VStack spacing={4} as="ul">
-        {notes.map((note) => (
-          <Card
-            as={'li'}
-            _hover={{
-              boxShadow: 'xl',
-            }}
-            maxW="100%"
-            minW="100%"
-          >
-            <NextLink href={`/notes/${note.id}`}>
-              <HStack>
-                <CardHeader>
-                  <Heading size="md">{dayjs(note.date).format('YYYY-MM-DD')}</Heading>
-                </CardHeader>
-                <CardBody>
-                  <VStack align="stretch">
-                    {note.title ? <Heading size="xs">{note.title}</Heading> : ''}
-                    <Text fontSize="sm">{note.comment}</Text>
-                  </VStack>
-                </CardBody>
-              </HStack>
-            </NextLink>
-          </Card>
+        {notes.map((note, index) => (
+          <NoteCard note={note} key={index} />
         ))}
       </VStack>
     </div>
+  );
+}
+
+function NoteCard({ note }: { note: DataType; key: number }) {
+  return (
+    <Card
+      as={'li'}
+      _hover={{
+        boxShadow: 'xl',
+      }}
+      maxW="100%"
+      minW="100%"
+    >
+      <NextLink href={`/notes/${note.id}`}>
+        <HStack>
+          <CardHeader>
+            <Heading size="md">{dayjs(note.date).format('YYYY-MM-DD')}</Heading>
+          </CardHeader>
+          <CardBody>
+            <VStack align="stretch">
+              {note.title ? <Heading size="xs">{note.title}</Heading> : ''}
+              <Text fontSize="sm">{note.comment}</Text>
+            </VStack>
+          </CardBody>
+        </HStack>
+      </NextLink>
+    </Card>
   );
 }

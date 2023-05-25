@@ -1,4 +1,5 @@
 import { Container } from '@/components/common/chakra';
+import React from 'react';
 
 export default function Main({ children }: { children: React.ReactNode }) {
   return (

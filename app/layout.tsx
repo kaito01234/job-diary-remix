@@ -1,7 +1,8 @@
-import Provider from './provider';
+import React from 'react';
+import Footer from './footer';
 import Header from './header';
 import Main from './main';
-import Footer from './footer';
+import Provider from './provider';
 
 export const metadata = {
   title: 'Create Next App',

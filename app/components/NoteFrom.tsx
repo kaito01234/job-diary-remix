@@ -21,8 +21,8 @@ export default function NoteForm({ slug }: { slug?: string }) {
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  if (slug) {
-    useEffect(() => {
+  useEffect(() => {
+    if (slug) {
       const fetchNotes = async () => {
         const response = await await fetch(`/api/notes/${slug}`);
         const note: DataType = await response.json();
@@ -31,8 +31,8 @@ export default function NoteForm({ slug }: { slug?: string }) {
         setComment(note.comment);
       };
       fetchNotes();
-    }, []);
-  }
+    }
+  }, [slug]);
 
   const handleSaveClick = async (slug?: string) => {
     setLoading(true);

@@ -17,7 +17,7 @@ export default function Header() {
       >
         <Flex flex={1} justify="space-between" maxW="5xl" mx="auto">
           <Heading as="h1" size="lg">
-            <NextLink href="/">日記</NextLink>
+            <NextLink href="/home">日記</NextLink>
           </Heading>
           <Button
             as={NextLink}
@@ -25,7 +25,7 @@ export default function Header() {
             fontWeight={600}
             color="white"
             bg="orange.400"
-            href="/notes/new"
+            href="/home/notes/new"
             _hover={{
               bg: 'orange.300',
             }}

@@ -54,7 +54,7 @@ export default function NoteForm({ slug }: { slug?: string }) {
       });
     }
     setLoading(false);
-    router.push('/');
+    router.push('/home');
     startTransition(() => {
       router.refresh();
     });
@@ -65,13 +65,7 @@ export default function NoteForm({ slug }: { slug?: string }) {
       <Suspense fallback={'loading'}>
         <FormControl>
           <FormLabel>日付</FormLabel>
-          <SingleDatepicker
-            date={date}
-            configs={{
-              dateFormat: 'yyyy-MM-dd',
-            }}
-            onDateChange={setDate}
-          />
+          <SingleDatepicker date={date} onDateChange={setDate} />
           <FormLabel>タイトル</FormLabel>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           <FormLabel>本文</FormLabel>

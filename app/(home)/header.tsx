@@ -1,5 +1,6 @@
-import { Box, Flex, Heading, Button } from '@/components/common/chakra';
+import { Box, Button, Flex, Heading } from '@/components/common/chakra';
 import NextLink from 'next/link';
+import SignOutButton from '@/components/SignOutButton';
 
 export default function Header() {
   return (
@@ -19,15 +20,16 @@ export default function Header() {
           <Heading as="h1" size="lg">
             <NextLink href="/home">日記</NextLink>
           </Heading>
+          <SignOutButton />
           <Button
             as={NextLink}
             fontSize="sm"
             fontWeight={600}
             color="white"
-            bg="orange.400"
-            href="/home/notes/new"
+            bg="green.400"
+            href="/home/note/new"
             _hover={{
-              bg: 'orange.300',
+              bg: 'green.300',
             }}
           >
             日記を書く

@@ -7,8 +7,10 @@ import {
   Text,
   VStack,
 } from '@/components/common/chakra';
+import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface DataType {
   id: string;
@@ -18,15 +20,18 @@ interface DataType {
   createdAt: string;
 }
 
-async function getData() {
-  const notes = await fetch(`${process.env.BASE_URL}/api/notes`, {
+async function getData(userId: string) {
+  const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note`, {
     cache: 'no-store',
   });
   return notes.json();
 }
 
 export default async function Home() {
-  const notes: DataType[] = await getData();
+  const session = await getNextAuthServerSession();
+  if (!session?.user?.id) redirect('/');
+
+  const notes: DataType[] = await getData(session.user.id);
 
   return (
     <div>
@@ -49,7 +54,7 @@ function NoteCard({ note }: { note: DataType; key: number }) {
       maxW="100%"
       minW="100%"
     >
-      <NextLink href={`/home/notes/${note.id}`}>
+      <NextLink href={`/home/note/${note.id}`}>
         <HStack>
           <CardHeader>
             <Heading size="md">{dayjs(note.date).format('YYYY-MM-DD')}</Heading>

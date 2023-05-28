@@ -13,7 +13,7 @@ interface DataType {
   createdAt: string;
 }
 
-export default function NoteForm({ slug }: { slug?: string }) {
+export default function NoteForm({ userId, noteId }: { userId: string; noteId?: string }) {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState('');
@@ -22,9 +22,9 @@ export default function NoteForm({ slug }: { slug?: string }) {
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (slug) {
+    if (noteId) {
       const fetchNotes = async () => {
-        const response = await await fetch(`/api/notes/${slug}`);
+        const response = await await fetch(`/api/${userId}/note/${noteId}`);
         const note: DataType = await response.json();
         setDate(new Date(note.date));
         setTitle(note.title);
@@ -32,20 +32,20 @@ export default function NoteForm({ slug }: { slug?: string }) {
       };
       fetchNotes();
     }
-  }, [slug]);
+  }, [userId, noteId]);
 
-  const handleSaveClick = async (slug?: string) => {
+  const handleSaveClick = async (noteId?: string) => {
     setLoading(true);
-    if (slug) {
-      await fetch('/api/notes', {
+    if (noteId) {
+      await fetch(`/api/${userId}/note/${noteId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: slug, date, title, comment }),
+        body: JSON.stringify({ date, title, comment }),
       });
     } else {
-      await fetch('/api/notes', {
+      await fetch(`/api/${userId}/note`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,12 +73,12 @@ export default function NoteForm({ slug }: { slug?: string }) {
           <Button
             type="submit"
             color="white"
-            bg="orange.400"
+            bg="green.400"
             isLoading={loading || isPending}
             mt={4}
-            onClick={async () => await handleSaveClick(slug)}
+            onClick={async () => await handleSaveClick(noteId)}
           >
-            {slug ? 'Update' : 'Save'}
+            {noteId ? 'Update' : 'Save'}
           </Button>
         </FormControl>
       </Suspense>

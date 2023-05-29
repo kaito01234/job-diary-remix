@@ -1,19 +1,12 @@
 'use client';
 
 import { Button, FormControl, FormLabel, Input, Textarea } from '@/components/common/chakra';
+import { noteType } from '@/interfaces/type';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState, useTransition } from 'react';
 
-interface DataType {
-  id: string;
-  title: string;
-  comment: string;
-  date: Date;
-  createdAt: string;
-}
-
-export default function NoteForm({ userId, noteId }: { userId: string; noteId?: string }) {
+export default function NoteForm({ userId, note }: { userId: string; note?: noteType }) {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState('');
@@ -22,27 +15,29 @@ export default function NoteForm({ userId, noteId }: { userId: string; noteId?: 
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (noteId) {
-      const fetchNotes = async () => {
-        const response = await await fetch(`/api/${userId}/note/${noteId}`);
-        const note: DataType = await response.json();
-        setDate(new Date(note.date));
-        setTitle(note.title);
-        setComment(note.comment);
-      };
-      fetchNotes();
+    if (note) {
+      setDate(new Date(note.date));
+      setTitle(note.title);
+      setComment(note.comment);
     }
-  }, [userId, noteId]);
+  }, [note]);
 
-  const handleSaveClick = async (noteId?: string) => {
+  const handleSaveClick = async (note?: noteType) => {
     setLoading(true);
-    if (noteId) {
-      await fetch(`/api/${userId}/note/${noteId}`, {
+
+    // 無理やりtimezone調整
+    const yyyy = date.getFullYear().toString().padStart(2, '0');
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+    const dd = date.getDate().toString().padStart(2, '0');
+    const setDate = new Date(`${yyyy}-${mm}-${dd}T00:00:00Z`);
+
+    if (note) {
+      await fetch(`/api/${userId}/note/${note.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ date, title, comment }),
+        body: JSON.stringify({ date: setDate, title, comment }),
       });
     } else {
       await fetch(`/api/${userId}/note`, {
@@ -50,7 +45,7 @@ export default function NoteForm({ userId, noteId }: { userId: string; noteId?: 
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ date, title, comment }),
+        body: JSON.stringify({ date: setDate, title, comment }),
       });
     }
     setLoading(false);
@@ -76,9 +71,9 @@ export default function NoteForm({ userId, noteId }: { userId: string; noteId?: 
             bg="green.400"
             isLoading={loading || isPending}
             mt={4}
-            onClick={async () => await handleSaveClick(noteId)}
+            onClick={async () => await handleSaveClick(note)}
           >
-            {noteId ? 'Update' : 'Save'}
+            {note ? 'Update' : 'Save'}
           </Button>
         </FormControl>
       </Suspense>

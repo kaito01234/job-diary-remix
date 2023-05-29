@@ -1,9 +1,9 @@
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 export function withTokenVerification(handler: any) {
   return async (req: NextRequest, params: any) => {
-    const session = await getNextAuthServerSession();
+    await getNextAuthServerSession();
     // if (!session) {
     //   return new NextResponse(JSON.stringify({ status: 'fail', message: 'ログインしてください' }), {
     //     status: 401,

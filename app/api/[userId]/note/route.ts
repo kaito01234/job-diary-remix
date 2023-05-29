@@ -1,26 +1,45 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { withTokenVerification } from '../authenticateToken';
+import { prisma } from '@/libs/prisma';
 
-const prisma = new PrismaClient();
+export const GET = withTokenVerification(
+  async (
+    req: NextRequest,
+    {
+      params,
+    }: {
+      params: { userId: string };
+    }
+  ) => {
+    const { userId } = params;
 
-export async function GET(
-  req: NextRequest,
-  {
-    params,
-  }: {
-    params: { userId: string };
+    const notes = await prisma.note.findMany({
+      where: {
+        userId,
+      },
+    });
+    return NextResponse.json(notes);
   }
-) {
-  const { userId } = params;
+);
 
-  const notes = await prisma.note.findMany({
-    where: {
-      userId,
-    },
-  });
-  return NextResponse.json(notes);
-}
+// export async function GET(
+//   req: NextRequest,
+//   {
+//     params,
+//   }: {
+//     params: { userId: string };
+//   }
+// ) {
+//   const { userId } = params;
+
+//   const notes = await prisma.note.findMany({
+//     where: {
+//       userId,
+//     },
+//   });
+//   return NextResponse.json(notes);
+// }
 
 export async function POST(
   req: NextRequest,

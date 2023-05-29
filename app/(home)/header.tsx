@@ -1,6 +1,9 @@
+'use client';
+
+import HeaderMenu from '@/components/HeaderMenu';
 import { Box, Button, Flex, Heading } from '@/components/common/chakra';
+import { EditIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
-import SignOutButton from '@/components/SignOutButton';
 
 export default function Header() {
   return (
@@ -20,8 +23,8 @@ export default function Header() {
           <Heading as="h1" size="lg">
             <NextLink href="/home">日記</NextLink>
           </Heading>
-          <SignOutButton />
           <Button
+            leftIcon={<EditIcon />}
             as={NextLink}
             fontSize="sm"
             fontWeight={600}
@@ -32,8 +35,9 @@ export default function Header() {
               bg: 'green.300',
             }}
           >
-            日記を書く
+            書く
           </Button>
+          <HeaderMenu />
         </Flex>
       </Flex>
     </Box>

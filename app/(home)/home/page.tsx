@@ -7,18 +7,11 @@ import {
   Text,
   VStack,
 } from '@/components/common/chakra';
+import { noteType } from '@/interfaces/type';
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { redirect } from 'next/navigation';
-
-interface DataType {
-  id: string;
-  title: string;
-  comment: string;
-  date: Date;
-  createdAt: string;
-}
 
 async function getData(userId: string) {
   const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note`, {
@@ -31,7 +24,7 @@ export default async function Home() {
   const session = await getNextAuthServerSession();
   if (!session?.user?.id) redirect('/');
 
-  const notes: DataType[] = await getData(session.user.id);
+  const notes: noteType[] = await getData(session.user.id);
 
   return (
     <div>
@@ -44,7 +37,7 @@ export default async function Home() {
   );
 }
 
-function NoteCard({ note }: { note: DataType; key: number }) {
+function NoteCard({ note }: { note: noteType; key: number }) {
   return (
     <Card
       as={'li'}

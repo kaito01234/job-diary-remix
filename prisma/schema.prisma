@@ -66,7 +66,7 @@ model note {
   id        String   @id @default(cuid())
   date      DateTime
   title     String
-  comment   String
+  comment   String   @db.VarChar(2000)
   userId    String
   createdAt DateTime @default(now())
 

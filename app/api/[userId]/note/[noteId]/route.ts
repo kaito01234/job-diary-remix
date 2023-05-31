@@ -7,16 +7,18 @@ export async function GET(
   {
     params,
   }: {
-    params: { noteId: string };
+    params: { userId: string; noteId: string };
   }
 ) {
-  const { noteId } = params;
+  const { userId, noteId } = params;
 
   const note = await prisma.note.findUnique({
     where: {
       id: noteId,
     },
   });
+
+  if (note?.userId !== userId) return new NextResponse('', { status: 401 });
   return NextResponse.json(note);
 }
 
@@ -42,5 +44,7 @@ export async function PUT(
       id: noteId,
     },
   });
+
+  if (note?.userId !== userId) return new NextResponse('', { status: 401 });
   return NextResponse.json(note.id);
 }

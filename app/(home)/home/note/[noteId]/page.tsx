@@ -1,11 +1,13 @@
 import NoteForm from '@/components/NoteFrom';
 import { noteType } from '@/interfaces/type';
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 async function getData(userId: string, noteId: string) {
   const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note/${noteId}`, {
     cache: 'no-store',
+    headers: headers(),
   });
   return notes.json();
 }

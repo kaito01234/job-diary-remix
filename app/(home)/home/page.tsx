@@ -10,12 +10,14 @@ import {
 import { noteType } from '@/interfaces/type';
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 import dayjs from 'dayjs';
+import { headers } from 'next/headers';
 import NextLink from 'next/link';
 import { redirect } from 'next/navigation';
 
 async function getData(userId: string) {
   const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note`, {
     cache: 'no-store',
+    headers: headers(),
   });
   return notes.json();
 }

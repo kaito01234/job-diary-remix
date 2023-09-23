@@ -47,5 +47,8 @@
     "npm-check-updates": "^16.14.4",
     "prettier": "^3.0.3",
     "prisma": "^5.3.1"
+  },
+  "volta": {
+    "node": "20.7.0"
   }
 }

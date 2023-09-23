@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "mhutchie.git-graph",
+        "esbenp.prettier-vscode",
+        "prisma.prisma",
+        "mechatroner.rainbow-csv",
+        "gizak.shortcuts",
+        "shardulm94.trailing-spaces",
+        "oderwat.indent-rainbow",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode-remote.remote-containers"
+    ]
+}

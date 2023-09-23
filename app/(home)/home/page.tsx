@@ -1,17 +1,11 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  HStack,
-  Heading,
-  Text,
-  VStack,
-} from '@/components/common/chakra';
-import { noteType } from '@/interfaces/type';
-import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { redirect } from 'next/navigation';
+import React from 'react';
+
+import { Card, CardBody, CardHeader, HStack, Heading, Text, VStack } from '@/components/common/chakra';
+import { noteType } from '@/interfaces/type';
+import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 
 async function getData(userId: string) {
   const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note`, {

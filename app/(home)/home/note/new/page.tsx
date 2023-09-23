@@ -1,6 +1,8 @@
+import { redirect } from 'next/navigation';
+import React from 'react';
+
 import NoteForm from '@/components/NoteFrom';
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
-import { redirect } from 'next/navigation';
 
 export default async function CreateNote() {
   const session = await getNextAuthServerSession();

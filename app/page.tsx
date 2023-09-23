@@ -1,7 +1,9 @@
-import { Button, Flex, Heading, Image, Stack, Text } from '@/components/common/chakra';
-import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 import { redirect } from 'next/navigation';
-import SignInButton from './components/SignInButton';
+import React from 'react';
+
+import { Button, Flex, Heading, Image, Stack, Text } from '@/components/common/chakra';
+import SignInButton from '@/components/SignInButton';
+import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
 
 export default async function Top() {
   const session = await getNextAuthServerSession();

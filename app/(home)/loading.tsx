@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Box, Spinner } from '@/components/common/chakra';
 
 export default function Loading() {

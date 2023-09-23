@@ -1,9 +1,10 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
-import type { AuthOptions, SessionStrategy } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+
+import type { AuthOptions, SessionStrategy } from 'next-auth';
 
 const prisma = new PrismaClient();
 

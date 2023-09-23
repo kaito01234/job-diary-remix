@@ -1,6 +1,7 @@
 'use client'; // Error components must be Client components
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+
 import { Heading, Button } from '@/components/common/chakra';
 
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {

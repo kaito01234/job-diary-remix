@@ -1,13 +1,13 @@
 {
-    "recommendations": [
-        "ms-vscode-remote.remote-containers",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "mhutchie.git-graph",
-        "prisma.prisma",
-        "mechatroner.rainbow-csv",
-        "gizak.shortcuts",
-        "shardulm94.trailing-spaces",
-        "oderwat.indent-rainbow"
-    ]
+  "recommendations": [
+    "ms-vscode-remote.remote-containers",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "prisma.prisma",
+    "shardulm94.trailing-spaces",
+    "oderwat.indent-rainbow",
+    "mechatroner.rainbow-csv",
+    "mhutchie.git-graph",
+    "gizak.shortcuts"
+  ]
 }

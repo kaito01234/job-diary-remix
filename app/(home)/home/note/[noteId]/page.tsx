@@ -1,7 +1,9 @@
+import { redirect } from 'next/navigation';
+import React from 'react';
+
 import NoteForm from '@/components/NoteFrom';
 import { noteType } from '@/interfaces/type';
 import { getNextAuthServerSession } from '@/libs/getNextAuthServerSession';
-import { redirect } from 'next/navigation';
 
 async function getData(userId: string, noteId: string) {
   const notes = await fetch(`${process.env.BASE_URL}/api/${userId}/note/${noteId}`, {

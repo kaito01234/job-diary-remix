@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Container, Box, Text } from '@/components/common/chakra';
 
 export default function Footer() {

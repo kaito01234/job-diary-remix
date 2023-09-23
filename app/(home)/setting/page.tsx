@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@/components/common/chakra';
 
 export default async function Setting() {

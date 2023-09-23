@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, FormControl, FormLabel, Input, Textarea } from '@/components/common/chakra';
-import { noteType } from '@/interfaces/type';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { useRouter } from 'next/navigation';
-import { Suspense, useEffect, useState, useTransition } from 'react';
+import React, { Suspense, useEffect, useState, useTransition } from 'react';
+
+import { Button, FormControl, FormLabel, Input, Textarea } from '@/components/common/chakra';
+import { noteType } from '@/interfaces/type';
 
 export default function NoteForm({ userId, note }: { userId: string; note?: noteType }) {
   const router = useRouter();

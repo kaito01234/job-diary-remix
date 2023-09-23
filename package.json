@@ -7,13 +7,14 @@
     "build": "next build",
     "start": "node .next/standalone/server.js",
     "lint": "next lint",
+    "lint:fix": "next lint --fix app/",
     "migrate:deploy": "dotenv -e .env.local -- prisma migrate deploy",
     "migrate:reset": "dotenv -e .env.local prisma migrate reset",
     "migrate:dev": "dotenv -e .env.local prisma migrate dev --name",
     "migrate:generate": "prisma generate",
-    "vercel-build": "npx prisma generate && npx prisma migrate deploy && next build",
     "ncu": "ncu",
-    "ncu:update": "ncu -u"
+    "ncu:update": "ncu -u",
+    "vercel-build": "npx prisma generate && npx prisma migrate deploy && next build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

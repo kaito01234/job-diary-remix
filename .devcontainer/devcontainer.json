@@ -6,6 +6,21 @@
   "remoteEnv": {
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
   },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode-remote.remote-containers",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "prisma.prisma",
+        "shardulm94.trailing-spaces",
+        "oderwat.indent-rainbow",
+        "mechatroner.rainbow-csv",
+        "mhutchie.git-graph",
+        "gizak.shortcuts"
+      ]
+    }
+  },
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
       "moby": true,
@@ -15,12 +30,10 @@
     },
     "ghcr.io/devcontainers-contrib/features/volta:1": {
       "version": "latest"
+    },
+    "ghcr.io/devcontainers-contrib/features/act:1": {
+      "version": "latest"
     }
   },
-  "postCreateCommand": "volta setup",
-  "customizations": {
-    "vscode": {
-      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
-    }
-  }
+  "postCreateCommand": ".devcontainer/postCreateCommand.sh"
 }

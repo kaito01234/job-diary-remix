@@ -10,7 +10,7 @@ export default async function Top() {
   if (session?.user?.id) redirect('/home');
 
   return (
-    <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
+    <Stack minH={'100vh'} bg="gray.200" direction={{ base: 'column', md: 'row' }}>
       <Flex p={8} flex={1} align={'center'} justify={'center'}>
         <Stack spacing={6} w={'full'} maxW={'lg'}>
           <Heading fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}>
@@ -48,7 +48,7 @@ export default async function Top() {
         </Stack>
       </Flex>
       <Flex flex={1}>
-        <Image alt={'Login Image'} objectFit={'cover'} src={'top.svg'} />
+        <Image alt={'Login Image'} objectFit={'cover'} src={'next.svg'} />
       </Flex>
     </Stack>
   );

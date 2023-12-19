@@ -12,10 +12,6 @@ services:
       - .env.local
   db:
     image: mysql:8
-    command:
-      - mysqld
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
     restart: always
     ports:
       - '3306:3306'

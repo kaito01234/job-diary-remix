@@ -1,24 +1,21 @@
-version: '3'
+version: '3.8'
+
 services:
-  job-dialy:
-    build:
-      dockerfile: ./Dockerfile
-    image: job-dialy
-    ports:
-      - 3000:3000
+  postgres:
+    image: postgres:15
+    container_name: job-diary-postgres
+    network_mode: host
     environment:
-      DATABASE_URL: mysql://root:root@host.docker.internal:3306/job-dialy
-    env_file:
-      - .env.local
-  db:
-    image: mysql:8
-    restart: always
-    ports:
-      - '3306:3306'
+      POSTGRES_DB: job_diary
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     volumes:
-      - 'db:/var/lib/mysql'
-    environment:
-      MYSQL_ROOT_PASSWORD: 'root'
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  db:
+  postgres_data:

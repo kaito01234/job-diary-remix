@@ -1,39 +1,31 @@
 {
-  "name": "Docker from Docker Compose",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "remoteEnv": {
-    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-  },
+  "name": "Job Diary Remix",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20-bullseye",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode-remote.remote-containers",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "prisma.prisma",
-        "shardulm94.trailing-spaces",
-        "oderwat.indent-rainbow",
-        "mechatroner.rainbow-csv",
-        "mhutchie.git-graph",
-        "gizak.shortcuts"
+        "mhutchie.git-graph"
       ]
     }
   },
   "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "22.17.0",
+      "pnpmVersion": "10.12.4"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
       "moby": true,
       "installDockerBuildx": true,
       "version": "latest",
       "dockerDashComposeVersion": "v2"
-    },
-    "ghcr.io/devcontainers-contrib/features/volta:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers-contrib/features/act:1": {
-      "version": "latest"
     }
   },
-  "postCreateCommand": ".devcontainer/postCreateCommand.sh"
+  "forwardPorts": [5173, 5174],
+  "runArgs": ["--network=job-diary_default"]
 }

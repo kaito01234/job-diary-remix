@@ -1,6 +1,11 @@
 {
   "name": "Job Diary Remix",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:20-bullseye",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devenv",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -25,7 +30,5 @@
       "version": "latest",
       "dockerDashComposeVersion": "v2"
     }
-  },
-  "forwardPorts": [5173, 5174],
-  "runArgs": ["--network=job-diary_default"]
+  }
 }

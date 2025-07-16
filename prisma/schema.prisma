@@ -67,12 +67,35 @@ model VerificationToken {
 model Note {
   id        String   @id @default(cuid())
   date      DateTime
-  title     String
-  comment   String
+  title     String?  // タイトルは省略可能
+  content   String   // commentからcontentに変更
   userId    String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user User      @relation(fields: [userId], references: [id])
+  tags NoteTag[]
 
   @@index(fields: [userId])
+  @@index(fields: [date])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  notes NoteTag[]
+}
+
+model NoteTag {
+  noteId String
+  tagId  String
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index(fields: [noteId])
+  @@index(fields: [tagId])
 }

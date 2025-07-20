@@ -118,20 +118,20 @@ export async function action({ request, params }: ActionFunctionArgs) {
         // 新しいタグ関連付けを作成
         if (tags.length > 0) {
           await prisma.noteTag.createMany({
-            data: await Promise.all(
-              tags.map(async (tagName) => {
-                // タグが存在しない場合は作成
-                const tag = await prisma.tag.upsert({
-                  where: { name: tagName },
-                  update: {},
-                  create: { name: tagName },
-                });
-                return {
-                  noteId,
-                  tagId: tag.id,
-                };
-              })
-            ),
+            const tagAssociations = [];
+            for (const tagName of tags) {
+              // タグが存在しない場合は作成
+              const tag = await prisma.tag.upsert({
+                where: { name: tagName },
+                update: {},
+                create: { name: tagName },
+              });
+              tagAssociations.push({
+                noteId,
+                tagId: tag.id,
+              });
+            }
+            data: tagAssociations,
           });
         }
       });

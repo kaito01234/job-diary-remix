@@ -1,13 +1,13 @@
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
+import { ArrowLeft, Calendar, Save } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { ArrowLeft, Calendar, Save } from "lucide-react";
-import { prisma } from "~/lib/prisma";
+import { createNote } from "~/models/note";
 
 export const meta: MetaFunction = () => {
   return [
@@ -18,39 +18,54 @@ export const meta: MetaFunction = () => {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const title = formData.get("title") as string;
+  const title = formData.get("title") as string | null;
   const date = formData.get("date") as string;
-  const comment = formData.get("comment") as string;
+  const content = formData.get("content") as string;
+  const tagsInput = formData.get("tags") as string;
 
   // TODO: 認証機能実装後にuserIdを取得する
   const userId = "temp-user-id";
 
   // バリデーション
-  const errors: { title?: string; date?: string; comment?: string; general?: string } = {};
-  if (!title.trim()) errors.title = "タイトルを入力してください";
+  const errors: {
+    title?: string;
+    date?: string;
+    content?: string;
+    general?: string;
+  } = {};
   if (!date) errors.date = "日付を選択してください";
-  if (!comment.trim()) errors.comment = "コメントを入力してください";
+  if (!content?.trim()) errors.content = "内容を入力してください";
 
   if (Object.keys(errors).length > 0) {
     return json({ errors }, { status: 400 });
   }
 
   try {
-    await prisma.note.create({
-      data: {
-        title: title.trim(),
-        date: new Date(date),
-        comment: comment.trim(),
-        userId,
-      },
+    // タグを解析（カンマ区切り）
+    const tags = tagsInput
+      ? tagsInput
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0)
+      : [];
+
+    const note = await createNote({
+      title: title?.trim() || undefined,
+      date: new Date(date),
+      content: content.trim(),
+      tags,
+      userId,
     });
 
-    return redirect("/notes");
+    return redirect(`/notes/${note.id}`);
   } catch (error) {
     console.error("Note creation error:", error);
-    return json({ 
-      errors: { general: "保存に失敗しました。もう一度お試しください。" }
-    }, { status: 500 });
+    return json(
+      {
+        errors: { general: "保存に失敗しました。もう一度お試しください。" },
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -91,19 +106,20 @@ export default function NewNote() {
         <CardContent>
           <Form method="post" className="space-y-6">
             <div>
-              <Label htmlFor="title">タイトル</Label>
+              <Label htmlFor="title">タイトル（任意）</Label>
               <Input
                 id="title"
                 name="title"
                 placeholder="今日の仕事について..."
                 className="mt-1"
-                required
               />
-              {actionData?.errors && "title" in actionData.errors && actionData.errors.title && (
-                <p className="text-red-500 text-sm mt-1">
-                  {actionData.errors.title}
-                </p>
-              )}
+              {actionData?.errors &&
+                "title" in actionData.errors &&
+                actionData.errors.title && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {actionData.errors.title}
+                  </p>
+                )}
             </div>
 
             <div>
@@ -116,43 +132,55 @@ export default function NewNote() {
                 className="mt-1"
                 required
               />
-              {actionData?.errors && "date" in actionData.errors && actionData.errors.date && (
-                <p className="text-red-500 text-sm mt-1">
-                  {actionData.errors.date}
-                </p>
-              )}
+              {actionData?.errors &&
+                "date" in actionData.errors &&
+                actionData.errors.date && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {actionData.errors.date}
+                  </p>
+                )}
             </div>
 
             <div>
-              <Label htmlFor="comment">コメント</Label>
+              <Label htmlFor="content">内容</Label>
               <Textarea
-                id="comment"
-                name="comment"
+                id="content"
+                name="content"
                 placeholder="今日の仕事で学んだことや感じたことを記録しましょう..."
                 className="mt-1 min-h-[150px]"
                 required
               />
-              {actionData?.errors && "comment" in actionData.errors && actionData.errors.comment && (
-                <p className="text-red-500 text-sm mt-1">
-                  {actionData.errors.comment}
-                </p>
-              )}
+              {actionData?.errors &&
+                "content" in actionData.errors &&
+                actionData.errors.content && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {actionData.errors.content}
+                  </p>
+                )}
             </div>
 
-            {actionData?.errors && "general" in actionData.errors && actionData.errors.general && (
-              <p className="text-red-500 text-sm">
-                {actionData.errors.general}
-              </p>
-            )}
+            <div>
+              <Label htmlFor="tags">タグ（カンマ区切り）</Label>
+              <Input
+                id="tags"
+                name="tags"
+                placeholder="例: 開発, フロントエンド, React"
+                className="mt-1"
+              />
+            </div>
+
+            {actionData?.errors &&
+              "general" in actionData.errors &&
+              actionData.errors.general && (
+                <p className="text-red-500 text-sm">
+                  {actionData.errors.general}
+                </p>
+              )}
 
             <div className="flex gap-4">
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="flex-1"
-              >
+              <Button type="submit" disabled={isSubmitting} className="flex-1">
                 <Save className="h-4 w-4 mr-2" />
-                {isSubmitting ? "保存中..." : "保存する"}
+                {isSubmitting ? "保存中..." : "保存"}
               </Button>
               <Link to="/notes">
                 <Button type="button" variant="outline">

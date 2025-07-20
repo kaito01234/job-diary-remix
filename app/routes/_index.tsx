@@ -1,8 +1,14 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Calendar, FileText, Plus } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,7 +19,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Job Diary
@@ -30,15 +36,11 @@ export default function Index() {
               <Plus className="h-5 w-5" />
               新しい日記
             </CardTitle>
-            <CardDescription>
-              今日の仕事について記録しましょう
-            </CardDescription>
+            <CardDescription>今日の仕事について記録しましょう</CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/notes/new">
-              <Button className="w-full">
-                日記を書く
-              </Button>
+              <Button className="w-full">日記を書く</Button>
             </Link>
           </CardContent>
         </Card>
@@ -49,9 +51,7 @@ export default function Index() {
               <FileText className="h-5 w-5" />
               日記一覧
             </CardTitle>
-            <CardDescription>
-              過去の日記を見返しましょう
-            </CardDescription>
+            <CardDescription>過去の日記を見返しましょう</CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/notes">
@@ -68,9 +68,7 @@ export default function Index() {
               <Calendar className="h-5 w-5" />
               今月の振り返り
             </CardTitle>
-            <CardDescription>
-              月単位での振り返りができます
-            </CardDescription>
+            <CardDescription>月単位での振り返りができます</CardDescription>
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full" disabled>
@@ -88,4 +86,3 @@ export default function Index() {
     </div>
   );
 }
-

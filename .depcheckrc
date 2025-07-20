@@ -1,0 +1,17 @@
+{
+  "ignores": [
+    "@remix-run/testing",
+    "@testing-library/react", 
+    "@testing-library/user-event",
+    "autoprefixer",
+    "depcheck",
+    "eslint-import-resolver-typescript",
+    "postcss",
+    "~"
+  ],
+  "ignore-patterns": [
+    "pnpm-lock.yaml",
+    "build",
+    ".cache"
+  ]
+}

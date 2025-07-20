@@ -1,18 +1,30 @@
-import type { LoaderFunctionArgs, ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useLoaderData, useActionData, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useActionData,
+  useNavigation,
+} from "@remix-run/react";
+import { ArrowLeft, Edit, Save, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { ArrowLeft, Edit, Save, Trash2 } from "lucide-react";
 import { prisma } from "~/lib/prisma";
-import { useState } from "react";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: data?.note ? `${data.note.title} - Job Diary` : "日記 - Job Diary" },
+    {
+      title: data?.note ? `${data.note.title} - Job Diary` : "日記 - Job Diary",
+    },
     { name: "description", content: "日記の詳細を確認・編集しよう" },
   ];
 };
@@ -53,13 +65,18 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (intent === "update") {
     const title = formData.get("title") as string;
     const date = formData.get("date") as string;
-    const comment = formData.get("comment") as string;
+    const content = formData.get("content") as string;
 
     // バリデーション
-    const errors: { title?: string; date?: string; comment?: string; general?: string } = {};
+    const errors: {
+      title?: string;
+      date?: string;
+      content?: string;
+      general?: string;
+    } = {};
     if (!title.trim()) errors.title = "タイトルを入力してください";
     if (!date) errors.date = "日付を選択してください";
-    if (!comment.trim()) errors.comment = "コメントを入力してください";
+    if (!content.trim()) errors.content = "内容を入力してください";
 
     if (Object.keys(errors).length > 0) {
       return json({ errors }, { status: 400 });
@@ -71,16 +88,19 @@ export async function action({ request, params }: ActionFunctionArgs) {
         data: {
           title: title.trim(),
           date: new Date(date),
-          comment: comment.trim(),
+          content: content.trim(),
         },
       });
 
       return json({ success: true });
     } catch (error) {
       console.error("Note update error:", error);
-      return json({ 
-        errors: { general: "更新に失敗しました。もう一度お試しください。" }
-      }, { status: 500 });
+      return json(
+        {
+          errors: { general: "更新に失敗しました。もう一度お試しください。" },
+        },
+        { status: 500 },
+      );
     }
   }
 
@@ -155,21 +175,23 @@ export default function NoteDetail() {
           {isEditing ? (
             <Form method="post" className="space-y-6">
               <input type="hidden" name="intent" value="update" />
-              
+
               <div>
                 <Label htmlFor="title">タイトル</Label>
                 <Input
                   id="title"
                   name="title"
-                  defaultValue={note.title}
+                  defaultValue={note.title || ""}
                   className="mt-1"
                   required
                 />
-                {actionData?.errors && "title" in actionData.errors && actionData.errors.title && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {actionData.errors.title}
-                  </p>
-                )}
+                {actionData?.errors &&
+                  "title" in actionData.errors &&
+                  actionData.errors.title && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {actionData.errors.title}
+                    </p>
+                  )}
               </div>
 
               <div>
@@ -182,52 +204,56 @@ export default function NoteDetail() {
                   className="mt-1"
                   required
                 />
-                {actionData?.errors && "date" in actionData.errors && actionData.errors.date && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {actionData.errors.date}
-                  </p>
-                )}
+                {actionData?.errors &&
+                  "date" in actionData.errors &&
+                  actionData.errors.date && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {actionData.errors.date}
+                    </p>
+                  )}
               </div>
 
               <div>
-                <Label htmlFor="comment">コメント</Label>
+                <Label htmlFor="content">内容</Label>
                 <Textarea
-                  id="comment"
-                  name="comment"
-                  defaultValue={note.comment}
+                  id="content"
+                  name="content"
+                  defaultValue={note.content}
                   className="mt-1 min-h-[150px]"
                   required
                 />
-                {actionData?.errors && "comment" in actionData.errors && actionData.errors.comment && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {actionData.errors.comment}
-                  </p>
-                )}
+                {actionData?.errors &&
+                  "content" in actionData.errors &&
+                  actionData.errors.content && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {actionData.errors.content}
+                    </p>
+                  )}
               </div>
 
-              {actionData?.errors && "general" in actionData.errors && actionData.errors.general && (
-                <p className="text-red-500 text-sm">
-                  {actionData.errors.general}
-                </p>
-              )}
+              {actionData?.errors &&
+                "general" in actionData.errors &&
+                actionData.errors.general && (
+                  <p className="text-red-500 text-sm">
+                    {actionData.errors.general}
+                  </p>
+                )}
 
               {actionData?.success && (
-                <p className="text-green-500 text-sm">
-                  更新しました！
-                </p>
+                <p className="text-green-500 text-sm">更新しました！</p>
               )}
 
               <div className="flex gap-4">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmitting}
                   className="flex-1"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   {isSubmitting ? "保存中..." : "保存する"}
                 </Button>
-                <Button 
-                  type="button" 
+                <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setIsEditing(false)}
                 >
@@ -249,16 +275,14 @@ export default function NoteDetail() {
                   })}
                 </p>
               </div>
-              
+
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                   コメント
                 </p>
-                <p className="text-base whitespace-pre-line">
-                  {note.comment}
-                </p>
+                <p className="text-base whitespace-pre-line">{note.content}</p>
               </div>
-              
+
               <div className="pt-4 border-t">
                 <p className="text-xs text-gray-400 dark:text-gray-500">
                   作成日: {new Date(note.createdAt).toLocaleDateString("ja-JP")}

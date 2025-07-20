@@ -229,7 +229,8 @@ export default function NoteDetail() {
                   className="mt-1"
                   required
                 />
-                {actionData?.errors &&
+                {actionData &&
+                  "errors" in actionData &&
                   "date" in actionData.errors &&
                   actionData.errors.date && (
                     <p className="text-red-500 text-sm mt-1">
@@ -247,7 +248,8 @@ export default function NoteDetail() {
                   className="mt-1 min-h-[150px]"
                   required
                 />
-                {actionData?.errors &&
+                {actionData &&
+                  "errors" in actionData &&
                   "content" in actionData.errors &&
                   actionData.errors.content && (
                     <p className="text-red-500 text-sm mt-1">
@@ -270,7 +272,8 @@ export default function NoteDetail() {
                 />
               </div>
 
-              {actionData?.errors &&
+              {actionData &&
+                "errors" in actionData &&
                 "general" in actionData.errors &&
                 actionData.errors.general && (
                   <p className="text-red-500 text-sm">
@@ -278,7 +281,7 @@ export default function NoteDetail() {
                   </p>
                 )}
 
-              {actionData?.success && (
+              {actionData && "success" in actionData && actionData.success && (
                 <p className="text-green-500 text-sm">更新しました！</p>
               )}
 

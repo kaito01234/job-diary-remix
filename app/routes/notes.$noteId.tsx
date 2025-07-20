@@ -259,7 +259,7 @@ export default function NoteDetail() {
                 <Input
                   id="tags"
                   name="tags"
-                  defaultValue={note.tags?.map((noteTag) => noteTag.tag.name).join(", ") || ""}
+                  defaultValue={note.tags.map((noteTag) => noteTag.tag.name).join(", ") || ""}
                   placeholder="例: 開発, フロントエンド, React"
                   className="mt-1"
                 />

@@ -13,21 +13,13 @@ import {
 export const meta: MetaFunction = () => {
   return [
     { title: "Job Diary - 仕事日記" },
-    { name: "description", content: "あなたの仕事の記録を残そう" },
+    { name: "description", content: "仕事の記録を管理するアプリケーション" },
   ];
 };
 
 export default function Index() {
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-          Job Diary
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
-          あなたの仕事の記録を残そう
-        </p>
-      </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
         <Card>
@@ -78,11 +70,6 @@ export default function Index() {
         </Card>
       </div>
 
-      <div className="text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          継続的な記録で成長を実感しよう
-        </p>
-      </div>
     </div>
   );
 }

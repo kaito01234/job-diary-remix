@@ -18,7 +18,6 @@ export const meta: MetaFunction = () => {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const title = formData.get("title") as string | null;
   const date = formData.get("date") as string;
   const content = formData.get("content") as string;
   const tagsInput = formData.get("tags") as string;
@@ -28,7 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // バリデーション
   const errors: {
-    title?: string;
     date?: string;
     content?: string;
     general?: string;
@@ -41,16 +39,17 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   try {
-    // タグを解析（カンマ区切り）
+    // タグを解析（カンマ区切り、重複除去）
     const tags = tagsInput
-      ? tagsInput
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0)
+      ? [...new Set(
+          tagsInput
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0)
+        )]
       : [];
 
     const note = await createNote({
-      title: title?.trim() || undefined,
       date: new Date(date),
       content: content.trim(),
       tags,
@@ -105,23 +104,6 @@ export default function NewNote() {
         </CardHeader>
         <CardContent>
           <Form method="post" className="space-y-6">
-            <div>
-              <Label htmlFor="title">タイトル（任意）</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="今日の仕事について..."
-                className="mt-1"
-              />
-              {actionData?.errors &&
-                "title" in actionData.errors &&
-                actionData.errors.title && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {actionData.errors.title}
-                  </p>
-                )}
-            </div>
-
             <div>
               <Label htmlFor="date">日付</Label>
               <Input

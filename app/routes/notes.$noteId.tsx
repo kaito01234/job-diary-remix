@@ -90,12 +90,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
     try {
       // タグを解析（カンマ区切り、重複除去）
       const tags = tagsInput
-        ? [...new Set(
-            tagsInput
-              .split(",")
-              .map((tag) => tag.trim())
-              .filter((tag) => tag.length > 0)
-          )]
+        ? [
+            ...new Set(
+              tagsInput
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0),
+            ),
+          ]
         : [];
 
       // トランザクションでNote更新とタグ関連付けを実行
@@ -117,20 +119,20 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
         // 新しいタグ関連付けを作成
         if (tags.length > 0) {
+          const tagAssociations = [];
+          for (const tagName of tags) {
+            // タグが存在しない場合は作成
+            const tag = await prisma.tag.upsert({
+              where: { name: tagName },
+              update: {},
+              create: { name: tagName },
+            });
+            tagAssociations.push({
+              noteId,
+              tagId: tag.id,
+            });
+          }
           await prisma.noteTag.createMany({
-            const tagAssociations = [];
-            for (const tagName of tags) {
-              // タグが存在しない場合は作成
-              const tag = await prisma.tag.upsert({
-                where: { name: tagName },
-                update: {},
-                create: { name: tagName },
-              });
-              tagAssociations.push({
-                noteId,
-                tagId: tag.id,
-              });
-            }
             data: tagAssociations,
           });
         }
@@ -259,7 +261,10 @@ export default function NoteDetail() {
                 <Input
                   id="tags"
                   name="tags"
-                  defaultValue={note.tags.map((noteTag) => noteTag.tag.name).join(", ") || ""}
+                  defaultValue={
+                    note.tags.map((noteTag) => noteTag.tag.name).join(", ") ||
+                    ""
+                  }
                   placeholder="例: 開発, フロントエンド, React"
                   className="mt-1"
                 />

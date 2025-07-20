@@ -41,7 +41,7 @@ Accepted
 export default [
   // 基本設定（ignores）
   { ignores: ["**/build/**", "**/node_modules/**", ...] },
-  
+
   // メイン設定
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
@@ -49,7 +49,7 @@ export default [
     plugins: { /* all plugins */ },
     rules: { /* comprehensive rules */ }
   },
-  
+
   // テスト用設定
   { files: ["**/*.test.{js,jsx,ts,tsx}"], ... }
 ];

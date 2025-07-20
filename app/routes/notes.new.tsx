@@ -41,12 +41,14 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     // タグを解析（カンマ区切り、重複除去）
     const tags = tagsInput
-      ? [...new Set(
-          tagsInput
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag.length > 0)
-        )]
+      ? [
+          ...new Set(
+            tagsInput
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag.length > 0),
+          ),
+        ]
       : [];
 
     const note = await createNote({

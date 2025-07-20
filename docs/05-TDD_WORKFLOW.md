@@ -39,28 +39,28 @@
 
 ```typescript
 // app/models/note.test.ts
-import { describe, it, expect } from 'vitest';
-import { createNote } from './note';
+import { describe, it, expect } from "vitest";
+import { createNote } from "./note";
 
-describe('createNote', () => {
-  it('日記を作成できる', async () => {
+describe("createNote", () => {
+  it("日記を作成できる", async () => {
     // Arrange（準備）
     const noteData = {
-      date: new Date('2025-01-15'),
-      title: '今日の学び',
-      content: 'TDDについて学んだ',
-      tags: ['TDD', 'Testing'],
-      userId: 'user123'
+      date: new Date("2025-01-15"),
+      title: "今日の学び",
+      content: "TDDについて学んだ",
+      tags: ["TDD", "Testing"],
+      userId: "user123",
     };
 
     // Act（実行）
     const note = await createNote(noteData);
 
     // Assert（検証）- アサーションファースト
-    expect(note.content).toBe('TDDについて学んだ');
-    expect(note.title).toBe('今日の学び');
-    expect(note.date).toEqual(new Date('2025-01-15'));
-    expect(note.tags).toEqual(['TDD', 'Testing']);
+    expect(note.content).toBe("TDDについて学んだ");
+    expect(note.title).toBe("今日の学び");
+    expect(note.date).toEqual(new Date("2025-01-15"));
+    expect(note.tags).toEqual(["TDD", "Testing"]);
   });
 });
 ```
@@ -72,12 +72,12 @@ describe('createNote', () => {
 export async function createNote(data: any) {
   // 仮実装：ベタ書きで返す
   return {
-    id: '1',
+    id: "1",
     date: data.date,
     title: data.title,
     content: data.content,
     tags: data.tags,
-    userId: data.userId
+    userId: data.userId,
   };
 }
 ```
@@ -86,18 +86,18 @@ export async function createNote(data: any) {
 
 ```typescript
 // 2つ目の例を追加
-it('タイトルなしで日記を作成できる', async () => {
+it("タイトルなしで日記を作成できる", async () => {
   const noteData = {
-    date: new Date('2025-01-15'),
-    content: 'タイトルなしの日記',
+    date: new Date("2025-01-15"),
+    content: "タイトルなしの日記",
     tags: [],
-    userId: 'user123'
+    userId: "user123",
   };
 
   const note = await createNote(noteData);
 
   expect(note.title).toBeNull();
-  expect(note.content).toBe('タイトルなしの日記');
+  expect(note.content).toBe("タイトルなしの日記");
 });
 ```
 
@@ -105,7 +105,7 @@ it('タイトルなしで日記を作成できる', async () => {
 
 ```typescript
 // app/models/note.ts
-import { prisma } from '~/lib/prisma';
+import { prisma } from "~/lib/prisma";
 
 export async function createNote(data: CreateNoteInput) {
   // 実際のDB操作に置き換え
@@ -116,15 +116,15 @@ export async function createNote(data: CreateNoteInput) {
       content: data.content,
       userId: data.userId,
       tags: {
-        connectOrCreate: data.tags.map(tag => ({
+        connectOrCreate: data.tags.map((tag) => ({
           where: { name: tag },
-          create: { name: tag }
-        }))
-      }
+          create: { name: tag },
+        })),
+      },
     },
     include: {
-      tags: true
-    }
+      tags: true,
+    },
   });
 }
 ```
@@ -173,24 +173,24 @@ app/
 
 ```typescript
 // ❌ Bad
-it('test note creation', () => {});
+it("test note creation", () => {});
 
 // ✅ Good - 日本語で仕様を表現
-it('必須項目が入力されていない場合はエラーを返す', () => {});
+it("必須項目が入力されていない場合はエラーを返す", () => {});
 ```
 
 ### 2. AAA（Arrange-Act-Assert）パターン
 
 ```typescript
-it('タグ名は正規化される', () => {
+it("タグ名は正規化される", () => {
   // Arrange: 準備
-  const input = { tags: ['React', 'REACT', 'react'] };
-  
+  const input = { tags: ["React", "REACT", "react"] };
+
   // Act: 実行
   const normalized = normalizeTags(input.tags);
-  
+
   // Assert: 検証
-  expect(normalized).toEqual(['react']);
+  expect(normalized).toEqual(["react"]);
 });
 ```
 
@@ -198,21 +198,21 @@ it('タグ名は正規化される', () => {
 
 ```typescript
 // ❌ Bad - 複数の概念をテスト
-it('日記の作成と取得ができる', () => {
+it("日記の作成と取得ができる", () => {
   const created = await createNote(data);
   expect(created).toBeDefined();
-  
+
   const fetched = await getNote(created.id);
   expect(fetched.title).toBe(data.title);
 });
 
 // ✅ Good - 1つの概念のみ
-it('日記を作成できる', () => {
+it("日記を作成できる", () => {
   const note = await createNote(data);
   expect(note).toBeDefined();
 });
 
-it('作成した日記を取得できる', () => {
+it("作成した日記を取得できる", () => {
   const created = await createNote(data);
   const fetched = await getNote(created.id);
   expect(fetched.id).toBe(created.id);
@@ -235,9 +235,9 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: '22'
-          cache: 'pnpm'
-      
+          node-version: "22"
+          cache: "pnpm"
+
       - run: pnpm install
       - run: pnpm test
       - run: pnpm test:coverage

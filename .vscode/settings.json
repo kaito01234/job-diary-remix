@@ -1,6 +1,11 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": ["source.addMissingImports", "source.fixAll.eslint"],
-  "files.autoSave": "onFocusChange"
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "explicit"
+  },
+  "files.autoSave": "onFocusChange",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

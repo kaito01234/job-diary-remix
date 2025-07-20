@@ -14,6 +14,7 @@
 ## 技術スタック詳細
 
 ### フロントエンド
+
 - **フレームワーク**: Remix v2.16.8
 - **言語**: TypeScript (strict mode)
 - **スタイリング**: Tailwind CSS v3.x
@@ -23,6 +24,7 @@
 - **バリデーション**: Zod
 
 ### バックエンド
+
 - **ランタイム**: Node.js v22.17.0
 - **フレームワーク**: Remix (SSR)
 - **ORM**: Prisma v6.11.1
@@ -30,18 +32,21 @@
 - **セッション**: Cookie-based
 
 ### データベース
+
 - **DBMS**: PostgreSQL 15
 - **ホスティング**: Neon (Serverless)
 - **マイグレーション**: Prisma Migrate
 - **接続プール**: Neon Pooler
 
 ### インフラ
+
 - **ホスティング**: Vercel
 - **CDN**: Vercel Edge Network
 - **環境変数**: Vercel Environment Variables
 - **CI/CD**: GitHub Actions + Vercel
 
 ### 開発環境
+
 - **パッケージマネージャー**: pnpm v10.12.4
 - **コードフォーマッター**: Prettier
 - **リンター**: ESLint
@@ -54,7 +59,7 @@
 erDiagram
     User ||--o{ Note : "has many"
     Note }o--|| Tag : "has many"
-    
+
     User {
         string id PK
         string email UK
@@ -62,7 +67,7 @@ erDiagram
         datetime createdAt
         datetime updatedAt
     }
-    
+
     Note {
         string id PK
         datetime date
@@ -72,13 +77,13 @@ erDiagram
         datetime createdAt
         datetime updatedAt
     }
-    
+
     Tag {
         string id PK
         string name UK
         datetime createdAt
     }
-    
+
     NoteTag {
         string noteId FK
         string tagId FK
@@ -117,16 +122,19 @@ job-diary-remix/
 ## セキュリティ設計
 
 ### 認証・認可
+
 - セッションベース認証（Cookie）
 - CSRF保護（Remix built-in）
 - セキュアなCookie設定（httpOnly, secure, sameSite）
 
 ### データ保護
+
 - HTTPS必須
 - 環境変数による機密情報管理
 - Prepared Statements（Prisma経由）
 
 ### 入力検証
+
 - サーバーサイドバリデーション（Zod）
 - XSS対策（React自動エスケープ）
 - Content Security Policy設定
@@ -134,17 +142,20 @@ job-diary-remix/
 ## パフォーマンス最適化
 
 ### フロントエンド
+
 - Code Splitting（Remix自動）
 - Prefetching（Remix Link）
 - 画像最適化（将来実装）
 - Web Vitals監視
 
 ### バックエンド
+
 - データベースクエリ最適化
 - N+1問題の回避（Prisma include）
 - キャッシュ戦略（HTTP Cache Headers）
 
 ### データベース
+
 - インデックス設計
 - コネクションプーリング
 - クエリ最適化

@@ -20,7 +20,6 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className="max-w-4xl mx-auto">
-
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
         <Card>
           <CardHeader>
@@ -69,7 +68,6 @@ export default function Index() {
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 }

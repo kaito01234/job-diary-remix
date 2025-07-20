@@ -1,15 +1,19 @@
 # ADR-0003: UIコンポーネントライブラリにshadcn/uiを採用
 
 ## Status
+
 Accepted
 
 ## Date
+
 2025-07-15
 
 ## Context
+
 エンジニア向け日記アプリケーションのUIを構築するにあたり、開発効率とカスタマイズ性のバランスが取れたUIライブラリが必要。
 
 ### 要件
+
 - TypeScriptサポート
 - カスタマイズが容易
 - モダンなデザイン
@@ -17,6 +21,7 @@ Accepted
 - カレンダーコンポーネントの提供
 
 ### 検討した選択肢
+
 1. **shadcn/ui**: Radix UIベースのコピー&ペーストライブラリ
 2. **Material-UI (MUI)**: Googleのマテリアルデザイン
 3. **Ant Design**: エンタープライズ向けUI
@@ -24,11 +29,13 @@ Accepted
 5. **Tailwind UI**: 有料のTailwindベースコンポーネント
 
 ## Decision
+
 shadcn/uiを採用する。
 
 ## Consequences
 
 ### Positive
+
 - コンポーネントのソースコードを直接プロジェクトに含めるため、完全なカスタマイズが可能
 - 依存関係が最小限（Radix UIとTailwind CSS）
 - TypeScriptで完全に型付けされている
@@ -37,11 +44,13 @@ shadcn/uiを採用する。
 - 無料で商用利用可能
 
 ### Negative
+
 - アップデートは手動で行う必要がある
 - 初期セットアップに時間がかかる
 - デザインシステムとしての一貫性は自己責任
 
 ### Neutral
+
 - Tailwind CSSの知識が必要
 - コンポーネントのメンテナンスは自己責任
 - デザインはシンプルでミニマル（好みによる）

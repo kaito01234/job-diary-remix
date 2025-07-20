@@ -1,9 +1,15 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { CalendarDays, Plus, FileText } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction = () => {
@@ -16,7 +22,7 @@ export const meta: MetaFunction = () => {
 export async function loader() {
   // TODO: 認証機能実装後にuserIdを取得する
   const userId = "temp-user-id"; // 仮のユーザーID
-  
+
   const notes = await prisma.note.findMany({
     where: { userId },
     orderBy: { date: "desc" },
@@ -70,9 +76,7 @@ export default function NotesIndex() {
             <Card key={note.id} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">
-                    {note.title}
-                  </CardTitle>
+                  <CardTitle className="text-lg">{note.title}</CardTitle>
                   <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                     <CalendarDays className="h-4 w-4 mr-1" />
                     {new Date(note.date).toLocaleDateString("ja-JP", {
@@ -85,7 +89,7 @@ export default function NotesIndex() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base line-clamp-3">
-                  {note.comment}
+                  {note.content}
                 </CardDescription>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-xs text-gray-400 dark:text-gray-500">

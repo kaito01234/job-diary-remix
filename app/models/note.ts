@@ -1,4 +1,4 @@
-import { prisma } from '~/lib/prisma';
+import { prisma } from "~/lib/prisma";
 
 // 日記作成の入力型
 export type CreateNoteInput = {
@@ -18,22 +18,22 @@ export async function createNote(data: CreateNoteInput) {
       content: data.content,
       userId: data.userId,
       tags: {
-        create: data.tags.map(tagName => ({
+        create: data.tags.map((tagName) => ({
           tag: {
             connectOrCreate: {
               where: { name: tagName },
-              create: { name: tagName }
-            }
-          }
-        }))
-      }
+              create: { name: tagName },
+            },
+          },
+        })),
+      },
     },
     include: {
       tags: {
         include: {
-          tag: true
-        }
-      }
-    }
+          tag: true,
+        },
+      },
+    },
   });
 }

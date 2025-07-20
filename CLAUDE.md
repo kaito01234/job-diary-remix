@@ -208,6 +208,20 @@ Use `.env.production` for production environment.
 - Implemented first test and createNote function following Red-Green-Refactor cycle
 - Established Git commit conventions with Co-Authored-By
 
+### 2025-07-20
+
+- Completed all CRUD operations (Create, Read, Update, Delete) for notes
+- Fixed database connection issues (host.docker.internal → localhost)
+- Resolved development server startup problems with Vitest imports
+- Implemented comprehensive code quality tools:
+  - ESLint v9 with flat config format
+  - eslint-plugin-unicorn (100+ strict rules)
+  - Prettier for consistent formatting
+  - Remix-specific rule overrides for compatibility
+- Created ADR-0005 documenting linting decisions
+- Updated project documentation and development schedule
+- Achieved clean, production-ready codebase with no technical debt
+
 ## Git Commit Conventions
 
 ### Commit Message Format
@@ -223,6 +237,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Commit Types
+
 - `feat:` 新機能
 - `fix:` バグ修正
 - `docs:` ドキュメントのみの変更
@@ -250,9 +265,10 @@ We follow t_wada's TDD approach with these principles:
    - **Japanese Test Names**: Tests as specifications in Japanese
 
 3. **Test Structure**
+
    ```typescript
-   describe('機能名', () => {
-     it('仕様の説明（日本語）', () => {
+   describe("機能名", () => {
+     it("仕様の説明（日本語）", () => {
        // Arrange: 準備
        // Act: 実行
        // Assert: 検証（アサーションファースト）

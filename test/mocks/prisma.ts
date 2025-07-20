@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import createPrismaMock from 'prisma-mock';
+import { PrismaClient } from "@prisma/client";
+import createPrismaMock from "prisma-mock";
 
 // Prismaのモッククライアントを作成
 export const prismaMock = createPrismaMock<PrismaClient>();

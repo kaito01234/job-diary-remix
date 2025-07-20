@@ -1,32 +1,32 @@
-import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
 // Prismaのモックをセットアップ
-vi.mock('~/lib/prisma', async () => {
-  const { prismaMock } = await import('./mocks/prisma');
+vi.mock("~/lib/prisma", async () => {
+  const { prismaMock } = await import("./mocks/prisma");
   return {
-    prisma: prismaMock
+    prisma: prismaMock,
   };
 });
 
 // グローバルなテストユーティリティ
 declare global {
-  var testHelpers: {
+  let testHelpers: {
     mockDate: (date: Date) => void;
     cleanup: () => void;
   };
 }
 
-global.testHelpers = {
+globalThis.testHelpers = {
   // 日付のモック用ヘルパー
   mockDate: (date: Date) => {
     vi.useFakeTimers();
     vi.setSystemTime(date);
   },
-  
+
   // テスト後のクリーンアップ
   cleanup: () => {
     vi.useRealTimers();
     vi.clearAllMocks();
-  }
+  },
 };

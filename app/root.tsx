@@ -1,3 +1,4 @@
+import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
   Meta,
@@ -5,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import { Footer } from "~/components/Footer";
 import { Header } from "~/components/Header";
 
 import "./tailwind.css";
@@ -45,9 +46,10 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 container mx-auto px-6 py-8">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }

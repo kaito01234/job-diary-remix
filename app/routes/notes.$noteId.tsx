@@ -37,6 +37,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   const note = await prisma.note.findUnique({
     where: { id: noteId },
+    include: {
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+    },
   });
 
   if (!note) {
@@ -63,18 +70,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (intent === "update") {
-    const title = formData.get("title") as string;
     const date = formData.get("date") as string;
     const content = formData.get("content") as string;
+    const tagsInput = formData.get("tags") as string;
 
     // バリデーション
     const errors: {
-      title?: string;
       date?: string;
       content?: string;
       general?: string;
     } = {};
-    if (!title.trim()) errors.title = "タイトルを入力してください";
     if (!date) errors.date = "日付を選択してください";
     if (!content.trim()) errors.content = "内容を入力してください";
 
@@ -83,13 +88,52 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
 
     try {
-      await prisma.note.update({
-        where: { id: noteId },
-        data: {
-          title: title.trim(),
-          date: new Date(date),
-          content: content.trim(),
-        },
+      // タグを解析（カンマ区切り、重複除去）
+      const tags = tagsInput
+        ? [...new Set(
+            tagsInput
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag.length > 0)
+          )]
+        : [];
+
+      // トランザクションでNote更新とタグ関連付けを実行
+      await prisma.$transaction(async (prisma) => {
+        // Noteの基本情報を更新
+        await prisma.note.update({
+          where: { id: noteId },
+          data: {
+            title: null,
+            date: new Date(date),
+            content: content.trim(),
+          },
+        });
+
+        // 既存のタグ関連付けを削除
+        await prisma.noteTag.deleteMany({
+          where: { noteId },
+        });
+
+        // 新しいタグ関連付けを作成
+        if (tags.length > 0) {
+          await prisma.noteTag.createMany({
+            data: await Promise.all(
+              tags.map(async (tagName) => {
+                // タグが存在しない場合は作成
+                const tag = await prisma.tag.upsert({
+                  where: { name: tagName },
+                  update: {},
+                  create: { name: tagName },
+                });
+                return {
+                  noteId,
+                  tagId: tag.id,
+                };
+              })
+            ),
+          });
+        }
       });
 
       return json({ success: true });
@@ -128,16 +172,13 @@ export default function NoteDetail() {
           </Button>
         </Link>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            {note.title}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             {new Date(note.date).toLocaleDateString("ja-JP", {
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
-          </p>
+          </h1>
         </div>
         <div className="flex gap-2">
           <Button
@@ -177,24 +218,6 @@ export default function NoteDetail() {
               <input type="hidden" name="intent" value="update" />
 
               <div>
-                <Label htmlFor="title">タイトル</Label>
-                <Input
-                  id="title"
-                  name="title"
-                  defaultValue={note.title || ""}
-                  className="mt-1"
-                  required
-                />
-                {actionData?.errors &&
-                  "title" in actionData.errors &&
-                  actionData.errors.title && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {actionData.errors.title}
-                    </p>
-                  )}
-              </div>
-
-              <div>
                 <Label htmlFor="date">日付</Label>
                 <Input
                   id="date"
@@ -229,6 +252,17 @@ export default function NoteDetail() {
                       {actionData.errors.content}
                     </p>
                   )}
+              </div>
+
+              <div>
+                <Label htmlFor="tags">タグ（カンマ区切り）</Label>
+                <Input
+                  id="tags"
+                  name="tags"
+                  defaultValue={note.tags?.map((noteTag) => noteTag.tag.name).join(", ") || ""}
+                  placeholder="例: 開発, フロントエンド, React"
+                  className="mt-1"
+                />
               </div>
 
               {actionData?.errors &&
@@ -282,6 +316,24 @@ export default function NoteDetail() {
                 </p>
                 <p className="text-base whitespace-pre-line">{note.content}</p>
               </div>
+
+              {note.tags && note.tags.length > 0 && (
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    タグ
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {note.tags.map((noteTag) => (
+                      <span
+                        key={noteTag.tagId}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                      >
+                        {noteTag.tag.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-4 border-t">
                 <p className="text-xs text-gray-400 dark:text-gray-500">

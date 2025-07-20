@@ -76,15 +76,14 @@ export default function NotesIndex() {
             <Card key={note.id} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{note.title}</CardTitle>
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <CalendarDays className="h-4 w-4 mr-1" />
+                  <CardTitle className="text-lg flex items-center">
+                    <CalendarDays className="h-4 w-4 mr-2" />
                     {new Date(note.date).toLocaleDateString("ja-JP", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
                     })}
-                  </div>
+                  </CardTitle>
                 </div>
               </CardHeader>
               <CardContent>

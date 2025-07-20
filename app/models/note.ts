@@ -3,7 +3,6 @@ import { prisma } from "~/lib/prisma";
 // 日記作成の入力型
 export type CreateNoteInput = {
   date: Date;
-  title?: string;
   content: string;
   tags: string[];
   userId: string;
@@ -11,14 +10,17 @@ export type CreateNoteInput = {
 
 // 日記作成
 export async function createNote(data: CreateNoteInput) {
+  // 重複タグを除去
+  const uniqueTags = [...new Set(data.tags)];
+
   return await prisma.note.create({
     data: {
       date: data.date,
-      title: data.title || null,
+      title: null,
       content: data.content,
       userId: data.userId,
       tags: {
-        create: data.tags.map((tagName) => ({
+        create: uniqueTags.map((tagName) => ({
           tag: {
             connectOrCreate: {
               where: { name: tagName },

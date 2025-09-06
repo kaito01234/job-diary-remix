@@ -1,7 +1,7 @@
 {
   "ignores": [
     "@remix-run/testing",
-    "@testing-library/react", 
+    "@testing-library/react",
     "@testing-library/user-event",
     "autoprefixer",
     "depcheck",

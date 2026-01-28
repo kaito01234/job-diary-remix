@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { FileText, Home, Plus, Menu, X } from "lucide-react";
+import { Bean, Home, Plus, Menu, X, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 
@@ -12,9 +12,9 @@ export function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
+              <Bean className="h-5 w-5 text-green-600" />
               <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Job Diary
+                まめめも
               </span>
             </Link>
 
@@ -30,8 +30,8 @@ export function Header() {
                 to="/notes"
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
               >
-                <FileText className="h-4 w-4" />
-                日記一覧
+                <MessageSquare className="h-4 w-4" />
+                メモ一覧
               </Link>
             </nav>
           </div>
@@ -40,7 +40,7 @@ export function Header() {
             <Link to="/notes/new" className="hidden md:block">
               <Button size="sm">
                 <Plus className="h-4 w-4 mr-2" />
-                新しい日記
+                メモを書く
               </Button>
             </Link>
 
@@ -75,8 +75,8 @@ export function Header() {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FileText className="h-4 w-4" />
-              日記一覧
+              <MessageSquare className="h-4 w-4" />
+              メモ一覧
             </Link>
             <Link
               to="/notes/new"
@@ -84,7 +84,7 @@ export function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               <Plus className="h-4 w-4" />
-              新しい日記
+              メモを書く
             </Link>
           </nav>
         )}

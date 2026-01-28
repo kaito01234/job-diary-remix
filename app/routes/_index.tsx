@@ -12,8 +12,8 @@ import {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Job Diary - 仕事日記" },
-    { name: "description", content: "仕事の記録を管理するアプリケーション" },
+    { title: "まめめも - マメにメモする習慣" },
+    { name: "description", content: "日々の仕事をマメにメモして、振り返りや経歴書作成に活用" },
   ];
 };
 
@@ -25,13 +25,13 @@ export default function Index() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
-              新しい日記
+              メモを書く
             </CardTitle>
-            <CardDescription>今日の仕事について記録しましょう</CardDescription>
+            <CardDescription>今やっていることをサッとメモ</CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/notes/new">
-              <Button className="w-full">日記を書く</Button>
+              <Button className="w-full">メモを書く</Button>
             </Link>
           </CardContent>
         </Card>
@@ -40,9 +40,9 @@ export default function Index() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              日記一覧
+              メモ一覧
             </CardTitle>
-            <CardDescription>過去の日記を見返しましょう</CardDescription>
+            <CardDescription>過去のメモを振り返る</CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/notes">
@@ -57,9 +57,9 @@ export default function Index() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              今月の振り返り
+              日記・経歴書生成
             </CardTitle>
-            <CardDescription>月単位での振り返りができます</CardDescription>
+            <CardDescription>メモから自動生成（AI機能）</CardDescription>
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full" disabled>

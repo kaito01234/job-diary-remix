@@ -14,8 +14,8 @@ import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "日記一覧 - Job Diary" },
-    { name: "description", content: "過去の日記を確認しよう" },
+    { title: "メモ一覧 - まめめも" },
+    { name: "description", content: "過去のメモを振り返ろう" },
   ];
 };
 
@@ -40,7 +40,7 @@ export default function NotesIndex() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            日記一覧
+            メモ一覧
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mt-2">
             これまでの記録を振り返ろう
@@ -49,7 +49,7 @@ export default function NotesIndex() {
         <Link to="/notes/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            新しい日記
+            メモを書く
           </Button>
         </Link>
       </div>
@@ -58,15 +58,15 @@ export default function NotesIndex() {
         <div className="text-center py-12">
           <FileText className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            まだ日記がありません
+            まだメモがありません
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            最初の日記を書いてみましょう
+            最初のメモを書いてみましょう
           </p>
           <Link to="/notes/new">
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              日記を書く
+              メモを書く
             </Button>
           </Link>
         </div>

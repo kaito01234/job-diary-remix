@@ -23,9 +23,9 @@ import { prisma } from "~/lib/prisma";
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     {
-      title: data?.note ? `${data.note.title} - Job Diary` : "日記 - Job Diary",
+      title: data?.note ? `メモ詳細 - まめめも` : "メモ - まめめも",
     },
-    { name: "description", content: "日記の詳細を確認・編集しよう" },
+    { name: "description", content: "メモの詳細を確認・編集" },
   ];
 };
 
@@ -198,7 +198,7 @@ export default function NoteDetail() {
               variant="destructive"
               size="sm"
               onClick={(e) => {
-                if (!confirm("この日記を削除しますか？")) {
+                if (!confirm("このメモを削除しますか？")) {
                   e.preventDefault();
                 }
               }}
@@ -212,7 +212,7 @@ export default function NoteDetail() {
 
       <Card>
         <CardHeader>
-          <CardTitle>日記の詳細</CardTitle>
+          <CardTitle>メモの詳細</CardTitle>
         </CardHeader>
         <CardContent>
           {isEditing ? (
@@ -320,7 +320,7 @@ export default function NoteDetail() {
 
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  コメント
+                  内容
                 </p>
                 <p className="text-base whitespace-pre-line">{note.content}</p>
               </div>

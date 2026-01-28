@@ -11,8 +11,8 @@ import { createNote } from "~/models/note";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "新しい日記 - Job Diary" },
-    { name: "description", content: "今日の仕事について記録しよう" },
+    { title: "メモを書く - まめめも" },
+    { name: "description", content: "今やっていることをサッとメモ" },
   ];
 };
 
@@ -89,10 +89,10 @@ export default function NewNote() {
         </Link>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            新しい日記
+            メモを書く
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mt-1">
-            今日の仕事について記録しよう
+            今やっていることをサッとメモ
           </p>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function NewNote() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            日記の作成
+            メモの作成
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -130,7 +130,7 @@ export default function NewNote() {
               <Textarea
                 id="content"
                 name="content"
-                placeholder="今日の仕事で学んだことや感じたことを記録しましょう..."
+                placeholder="今やっていることをサッとメモ..."
                 className="mt-1 min-h-[150px]"
                 required
               />

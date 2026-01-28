@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { CalendarDays, Plus, FileText } from "lucide-react";
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { requireUser } from "~/lib/auth.server";
 import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction = () => {
@@ -19,14 +20,13 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader() {
-  // TODO: 認証機能実装後にuserIdを取得する
-  const userId = "temp-user-id"; // 仮のユーザーID
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await requireUser(request);
 
   const notes = await prisma.note.findMany({
-    where: { userId },
+    where: { userId: user.id },
     orderBy: { date: "desc" },
-    take: 20, // 最新20件
+    take: 20,
   });
 
   return json({ notes });

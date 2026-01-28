@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import { requireUser } from "~/lib/auth.server";
 import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -29,7 +30,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const user = await requireUser(request);
+
   const noteId = params.noteId;
   if (!noteId) {
     throw new Response("Not Found", { status: 404 });
@@ -46,7 +49,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     },
   });
 
-  if (!note) {
+  if (!note || note.userId !== user.id) {
     throw new Response("Not Found", { status: 404 });
   }
 
@@ -54,8 +57,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
+  const user = await requireUser(request);
+
   const noteId = params.noteId;
   if (!noteId) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  // 所有権チェック
+  const existingNote = await prisma.note.findUnique({
+    where: { id: noteId },
+    select: { userId: true },
+  });
+
+  if (!existingNote || existingNote.userId !== user.id) {
     throw new Response("Not Found", { status: 404 });
   }
 

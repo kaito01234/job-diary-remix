@@ -1,12 +1,15 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import { Header } from "~/components/Header";
+import { getOptionalUser } from "~/lib/auth.server";
 
 import "./tailwind.css";
 
@@ -22,6 +25,11 @@ export const links: LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getOptionalUser(request);
+  return json({ user });
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,9 +50,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header user={user} />
       <main className="flex-1 container mx-auto px-6 py-8">
         <Outlet />
       </main>

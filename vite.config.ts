@@ -8,9 +8,11 @@ declare module "@remix-run/node" {
   }
 }
 
+const isStorybook = process.argv[1]?.includes("storybook");
+
 export default defineConfig({
   plugins: [
-    remix({
+    !isStorybook && remix({
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
@@ -20,5 +22,5 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-  ],
+  ].filter(Boolean),
 });

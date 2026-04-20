@@ -9,3 +9,6 @@ node_modules
 
 # Personal settings
 CLAUDE_PERSONAL.md
+
+*storybook.log
+storybook-static

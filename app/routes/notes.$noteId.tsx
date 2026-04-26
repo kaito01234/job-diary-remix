@@ -18,18 +18,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import { requireUser } from "~/lib/auth.server";
 import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     {
-      title: data?.note ? `${data.note.title} - Job Diary` : "日記 - Job Diary",
+      title: data?.note ? `メモ詳細 - まめめも` : "メモ - まめめも",
     },
-    { name: "description", content: "日記の詳細を確認・編集しよう" },
+    { name: "description", content: "メモの詳細を確認・編集" },
   ];
 };
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const user = await requireUser(request);
+
   const noteId = params.noteId;
   if (!noteId) {
     throw new Response("Not Found", { status: 404 });
@@ -46,7 +49,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     },
   });
 
-  if (!note) {
+  if (!note || note.userId !== user.id) {
     throw new Response("Not Found", { status: 404 });
   }
 
@@ -54,8 +57,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
+  const user = await requireUser(request);
+
   const noteId = params.noteId;
   if (!noteId) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  // 所有権チェック
+  const existingNote = await prisma.note.findUnique({
+    where: { id: noteId },
+    select: { userId: true },
+  });
+
+  if (!existingNote || existingNote.userId !== user.id) {
     throw new Response("Not Found", { status: 404 });
   }
 
@@ -198,7 +213,7 @@ export default function NoteDetail() {
               variant="destructive"
               size="sm"
               onClick={(e) => {
-                if (!confirm("この日記を削除しますか？")) {
+                if (!confirm("このメモを削除しますか？")) {
                   e.preventDefault();
                 }
               }}
@@ -212,7 +227,7 @@ export default function NoteDetail() {
 
       <Card>
         <CardHeader>
-          <CardTitle>日記の詳細</CardTitle>
+          <CardTitle>メモの詳細</CardTitle>
         </CardHeader>
         <CardContent>
           {isEditing ? (
@@ -320,7 +335,7 @@ export default function NoteDetail() {
 
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  コメント
+                  内容
                 </p>
                 <p className="text-base whitespace-pre-line">{note.content}</p>
               </div>

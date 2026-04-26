@@ -1,9 +1,19 @@
-import { Link } from "@remix-run/react";
-import { FileText, Home, Plus, Menu, X } from "lucide-react";
+import { Form, Link } from "@remix-run/react";
+import { Bean, Home, Plus, Menu, X, MessageSquare, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 
-export function Header() {
+type User = {
+  id: string;
+  name: string | null;
+  image: string | null;
+} | null;
+
+type HeaderProps = {
+  user?: User;
+};
+
+export function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -12,56 +22,96 @@ export function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
+              <Bean className="h-5 w-5 text-green-600" />
               <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Job Diary
+                まめめも
               </span>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-4">
-              <Link
-                to="/"
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
-              >
-                <Home className="h-4 w-4" />
-                ホーム
-              </Link>
-              <Link
-                to="/notes"
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
-              >
-                <FileText className="h-4 w-4" />
-                日記一覧
-              </Link>
-            </nav>
+            {user && (
+              <nav className="hidden md:flex items-center gap-4">
+                <Link
+                  to="/"
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
+                >
+                  <Home className="h-4 w-4" />
+                  ホーム
+                </Link>
+                <Link
+                  to="/notes"
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  メモ一覧
+                </Link>
+              </nav>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
-            <Link to="/notes/new" className="hidden md:block">
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                新しい日記
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/notes/new" className="hidden md:block">
+                  <Button size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    メモを書く
+                  </Button>
+                </Link>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
+                <div className="hidden md:flex items-center gap-3">
+                  {user.image && (
+                    <img
+                      src={user.image}
+                      alt={user.name || "User"}
+                      className="h-8 w-8 rounded-full"
+                    />
+                  )}
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
+                    {user.name}
+                  </span>
+                  <Form method="post" action="/auth/logout">
+                    <Button variant="ghost" size="sm" type="submit">
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  </Form>
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button size="sm">ログイン</Button>
+              </Link>
+            )}
           </div>
         </div>
 
         {/* モバイルメニュー */}
-        {isMenuOpen && (
+        {isMenuOpen && user && (
           <nav className="md:hidden mt-4 pb-4 space-y-3">
+            <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+              {user.image && (
+                <img
+                  src={user.image}
+                  alt={user.name || "User"}
+                  className="h-8 w-8 rounded-full"
+                />
+              )}
+              <span className="text-sm text-gray-600 dark:text-gray-300">
+                {user.name}
+              </span>
+            </div>
             <Link
               to="/"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
@@ -75,8 +125,8 @@ export function Header() {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FileText className="h-4 w-4" />
-              日記一覧
+              <MessageSquare className="h-4 w-4" />
+              メモ一覧
             </Link>
             <Link
               to="/notes/new"
@@ -84,8 +134,18 @@ export function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               <Plus className="h-4 w-4" />
-              新しい日記
+              メモを書く
             </Link>
+            <Form method="post" action="/auth/logout">
+              <button
+                type="submit"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors w-full"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <LogOut className="h-4 w-4" />
+                ログアウト
+              </button>
+            </Form>
           </nav>
         )}
       </div>

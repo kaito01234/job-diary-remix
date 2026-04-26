@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { CalendarDays, Plus, FileText } from "lucide-react";
@@ -10,23 +10,23 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { requireUser } from "~/lib/auth.server";
 import { prisma } from "~/lib/prisma";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "日記一覧 - Job Diary" },
-    { name: "description", content: "過去の日記を確認しよう" },
+    { title: "メモ一覧 - まめめも" },
+    { name: "description", content: "過去のメモを振り返ろう" },
   ];
 };
 
-export async function loader() {
-  // TODO: 認証機能実装後にuserIdを取得する
-  const userId = "temp-user-id"; // 仮のユーザーID
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await requireUser(request);
 
   const notes = await prisma.note.findMany({
-    where: { userId },
+    where: { userId: user.id },
     orderBy: { date: "desc" },
-    take: 20, // 最新20件
+    take: 20,
   });
 
   return json({ notes });
@@ -40,7 +40,7 @@ export default function NotesIndex() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            日記一覧
+            メモ一覧
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mt-2">
             これまでの記録を振り返ろう
@@ -49,7 +49,7 @@ export default function NotesIndex() {
         <Link to="/notes/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            新しい日記
+            メモを書く
           </Button>
         </Link>
       </div>
@@ -58,15 +58,15 @@ export default function NotesIndex() {
         <div className="text-center py-12">
           <FileText className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            まだ日記がありません
+            まだメモがありません
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            最初の日記を書いてみましょう
+            最初のメモを書いてみましょう
           </p>
           <Link to="/notes/new">
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              日記を書く
+              メモを書く
             </Button>
           </Link>
         </div>

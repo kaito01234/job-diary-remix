@@ -1,4 +1,8 @@
-import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { ArrowLeft, Calendar, Save } from "lucide-react";
@@ -7,23 +11,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import { requireUser } from "~/lib/auth.server";
 import { createNote } from "~/models/note";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "新しい日記 - Job Diary" },
-    { name: "description", content: "今日の仕事について記録しよう" },
+    { title: "メモを書く - まめめも" },
+    { name: "description", content: "今やっていることをサッとメモ" },
   ];
 };
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  await requireUser(request);
+  return null;
+}
+
 export async function action({ request }: ActionFunctionArgs) {
+  const user = await requireUser(request);
+
   const formData = await request.formData();
   const date = formData.get("date") as string;
   const content = formData.get("content") as string;
   const tagsInput = formData.get("tags") as string;
-
-  // TODO: 認証機能実装後にuserIdを取得する
-  const userId = "temp-user-id";
 
   // バリデーション
   const errors: {
@@ -55,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
       date: new Date(date),
       content: content.trim(),
       tags,
-      userId,
+      userId: user.id,
     });
 
     return redirect(`/notes/${note.id}`);
@@ -89,10 +98,10 @@ export default function NewNote() {
         </Link>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            新しい日記
+            メモを書く
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mt-1">
-            今日の仕事について記録しよう
+            今やっていることをサッとメモ
           </p>
         </div>
       </div>
@@ -101,7 +110,7 @@ export default function NewNote() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            日記の作成
+            メモの作成
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -130,7 +139,7 @@ export default function NewNote() {
               <Textarea
                 id="content"
                 name="content"
-                placeholder="今日の仕事で学んだことや感じたことを記録しましょう..."
+                placeholder="今やっていることをサッとメモ..."
                 className="mt-1 min-h-[150px]"
                 required
               />
